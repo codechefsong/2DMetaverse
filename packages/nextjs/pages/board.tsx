@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { BoardMain } from "~~/components/board/Board";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const Board: NextPage = () => {
   return (
@@ -13,8 +15,10 @@ const Board: NextPage = () => {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree&display=swap" rel="stylesheet" />
       </MetaHeader>
-      <div className="flex justify-center">
-        <BoardMain />
+      <div className="flex flex-col items-center">
+        <DndProvider backend={HTML5Backend}>
+          <BoardMain />
+        </DndProvider>
       </div>
     </>
   );
