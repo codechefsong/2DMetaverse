@@ -4,6 +4,7 @@ import {
   useScaffoldContractRead,
   useScaffoldContractWrite
 } from "~~/hooks/scaffold-eth";
+import { useRouter } from 'next/router';
 
 const generateGridData = () => {
   const data = [];
@@ -21,8 +22,10 @@ const generateGridData = () => {
 };
 
 
-const Cell = ({ id, content, type, index, gridData, bagData, moveItem, setSelectedIndex }) => {
-  const handleDrop = (item, index) => {
+const Cell = ({ id, content, type, index, gridData, bagData, moveItem, changeSelectedIndex }) => {
+  const router = useRouter();
+
+  const handleDrop = async (item, index) => {
     // Handle the drop logic here
     // let newGrid = [...gridData];
     // console.log(item, index)
@@ -35,15 +38,15 @@ const Cell = ({ id, content, type, index, gridData, bagData, moveItem, setSelect
     // const oldContent = gridData[index].content;
     // newGrid[index].content = item.content;
     // newGrid[item.index].content = oldContent;
-    console.log(index, "d")
-    moveItem();
+    // const contract = new ethers.Contract(contracts[chains.hardhat.id][0].contracts.YourGarden.address, contracts[chains.hardhat.id][0].contracts.YourGarden.abi);
+    // console.log(contract);
+    // const transaction = await contract.moveItem(index)
+    // const tx = await transaction.wait()
+    // console.log(tx)
+
+    router.push('/confirm/'+ index)
     //setGridData(newGrid);
   };
-
-  const handleHover = (item, monitor) => {
-    console.log(index);
-    setSelectedIndex(index);
-  }
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'CELL',
@@ -55,7 +58,6 @@ const Cell = ({ id, content, type, index, gridData, bagData, moveItem, setSelect
 
   const [, drop] = useDrop(() => ({
     accept: 'CELL',
-    hover: handleHover,
     drop: (item) => handleDrop(item, index),
   }));
 
@@ -80,8 +82,7 @@ const Cell = ({ id, content, type, index, gridData, bagData, moveItem, setSelect
 export const BoardMain = () => {
   // const [gridData, setGridData] = useState(generateGridData());
   // const [bagData, setBagData] = useState(myItems);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  console.log(selectedIndex, "selectedIndex");
+  const [selectedIndex, setSelectedIndex] = useState(1);
 
   const { data: gridData } = useScaffoldContractRead({
     contractName: "YourGarden",
@@ -102,6 +103,11 @@ export const BoardMain = () => {
     },
   });
 
+  const changeSelectedIndex = (num) => {
+    console.log(num, selectedIndex, "ffff")
+    setSelectedIndex(num);
+  }
+
   return (
     <div>
       <div className="flex">
@@ -109,7 +115,7 @@ export const BoardMain = () => {
           <h2 className="mt-4 text-3xl">House {selectedIndex}</h2>
           <div className="flex flex-wrap" style={{ width: "350px"}}>
             {gridData && gridData.map((item, index) => (
-              <Cell key={item.id.toString()} id={item.id.toString()} content={item.content.toString()} type={item.typeGrid} index={index} gridData={gridData} bagData={bagData} moveItem={moveItem} setSelectedIndex={setSelectedIndex} />
+              <Cell key={item.id.toString()} id={item.id.toString()} content={item.content.toString()} type={item.typeGrid} index={index} gridData={gridData} bagData={bagData} moveItem={moveItem} changeSelectedIndex={changeSelectedIndex} />
             ))}
           </div>
         </div>
@@ -117,7 +123,7 @@ export const BoardMain = () => {
           <h2 className="mt-4 text-3xl">My Bag</h2>
           <div className="flex flex-wrap" style={{ width: "500px"}}>
             {bagData && bagData.map((item, index) => (
-              <Cell key={item.id.toString()} id={item.id.toString()} content={item.content.toString()} type={item.type} index={index} gridData={gridData} bagData={bagData} moveItem={moveItem} setSelectedIndex={setSelectedIndex} />
+              <Cell key={item.id.toString()} id={item.id.toString()} content={item.content.toString()} type={item.type} index={index} gridData={gridData} bagData={bagData} moveItem={moveItem} changeSelectedIndex={changeSelectedIndex} />
             ))}
           </div>
         </div>
