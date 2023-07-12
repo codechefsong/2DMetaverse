@@ -11,7 +11,7 @@ contract YourGarden {
         uint256 index;
         uint256 id;
         string typeGrid;
-        uint256 content;
+        string content;
     }
 
     constructor(address _owner) {
@@ -21,12 +21,10 @@ contract YourGarden {
 
         for (uint256 row = 0; row < 5; row++) {
             for (uint256 col = 0; col < 5; col++) {
-                grid.push(Box(id, id, "base", id + 1));
+                grid.push(Box(id, id, "base", "-"));
                 id++;
             }
         }
-
-        myBag.push(Box(26, 26, "mybags", 26 + 1));
     }
 
     modifier isOwner() {
@@ -47,9 +45,16 @@ contract YourGarden {
     }
 
     function moveItem(uint256 index) public {
-        grid[index].content = 999;
+        grid[index].content = "0";
+        myBag.pop();
 
         nums.push(index);
+    }
+
+     function buySeed() public {
+        uint256 total = nums.length;
+
+        myBag.push(Box(26 + total , 26 + total, "mybags", "O"));
     }
 
     function withdraw() isOwner public {
