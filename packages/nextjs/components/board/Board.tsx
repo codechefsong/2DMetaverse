@@ -6,46 +6,11 @@ import {
 } from "~~/hooks/scaffold-eth";
 import { useRouter } from 'next/router';
 
-const generateGridData = () => {
-  const data = [];
-  for (let row = 0; row < 5; row++) {
-    for (let col = 0; col < 5; col++) {
-      data.push({
-        id: `cell-${row}-${col}`,
-        index: data.length,
-        type: "base",
-        content: data.length + 1,
-      });
-    }
-  }
-  return data;
-};
-
-
 const Cell = ({ id, content, type, index, gridData, bagData, moveItem, changeSelectedIndex }) => {
   const router = useRouter();
 
   const handleDrop = async (item, index) => {
-    // Handle the drop logic here
-    // let newGrid = [...gridData];
-    // console.log(item, index)
-
-    // if(item.type === "mybags"){
-    //   newGrid[index].content = item.content;
-    //   const newBag = bagData
-    //   newBag.shift();
-    // }
-    // const oldContent = gridData[index].content;
-    // newGrid[index].content = item.content;
-    // newGrid[item.index].content = oldContent;
-    // const contract = new ethers.Contract(contracts[chains.hardhat.id][0].contracts.YourGarden.address, contracts[chains.hardhat.id][0].contracts.YourGarden.abi);
-    // console.log(contract);
-    // const transaction = await contract.moveItem(index)
-    // const tx = await transaction.wait()
-    // console.log(tx)
-
     router.push('/confirm/'+ index)
-    //setGridData(newGrid);
   };
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -68,13 +33,13 @@ const Cell = ({ id, content, type, index, gridData, bagData, moveItem, changeSel
   return (
     <div
       ref={cellRef} // Assign the ref to the actual DOM element
-      className="w-16 h-16 border border-gray-300 flex items-center justify-center font-bold"
+      className="w-16 h-16 border border-gray-300 flex items-center justify-center font-bold bg-yellow-100"
       style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: 'move',
       }}
     >
-      {content}
+      {content === "O" &&  <img src="/assets/seed.png" alt="Seed" />}
     </div>
   );
 };
@@ -104,7 +69,6 @@ export const BoardMain = () => {
   });
 
   const changeSelectedIndex = (num) => {
-    console.log(num, selectedIndex, "ffff")
     setSelectedIndex(num);
   }
 
@@ -112,7 +76,7 @@ export const BoardMain = () => {
     <div>
       <div className="flex">
         <div>
-          <h2 className="mt-4 text-3xl">House {selectedIndex}</h2>
+          <h2 className="mt-4 text-3xl">Garden  {selectedIndex}</h2>
           <div className="flex flex-wrap" style={{ width: "350px"}}>
             {gridData && gridData.map((item, index) => (
               <Cell key={item.id.toString()} id={item.id.toString()} content={item.content.toString()} type={item.typeGrid} index={index} gridData={gridData} bagData={bagData} moveItem={moveItem} changeSelectedIndex={changeSelectedIndex} />

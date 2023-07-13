@@ -45,7 +45,7 @@ contract YourGarden {
     }
 
     function moveItem(uint256 index) public {
-        grid[index].content = "0";
+        grid[index].content = "O";
         myBag.pop();
 
         nums.push(index);
