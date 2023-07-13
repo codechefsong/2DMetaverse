@@ -51,10 +51,14 @@ contract YourGarden {
         nums.push(index);
     }
 
-     function buySeed() public {
+    function buySeed() public {
         uint256 total = nums.length;
 
         myBag.push(Box(26 + total , 26 + total, "mybags", "O"));
+    }
+
+    function waterSeed(uint256 index) public {
+        grid[index].content = "G";
     }
 
     function withdraw() isOwner public {

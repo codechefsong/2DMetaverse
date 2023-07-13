@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import Link from "next/link";
 import { useDrag, useDrop } from 'react-dnd';
 import {
   useScaffoldContractRead,
@@ -6,11 +7,19 @@ import {
 } from "~~/hooks/scaffold-eth";
 import { useRouter } from 'next/router';
 
+import { Water } from "./Water";
+
 const Cell = ({ id, content, type, index, gridData, bagData, moveItem, changeSelectedIndex }) => {
   const router = useRouter();
 
   const handleDrop = async (item, index) => {
-    router.push('/confirm/'+ index)
+    console.log(item)
+    if(item.type === "water"){
+      router.push('/water/'+ index)
+    }
+    else{
+      router.push('/confirm/'+ index)
+    }
   };
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -33,13 +42,14 @@ const Cell = ({ id, content, type, index, gridData, bagData, moveItem, changeSel
   return (
     <div
       ref={cellRef} // Assign the ref to the actual DOM element
-      className="w-16 h-16 border border-gray-300 flex items-center justify-center font-bold bg-yellow-100"
+      className="w-16 h-16 border border-gray-300 flex items-center justify-center font-bold bg-green-100"
       style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: 'move',
       }}
     >
       {content === "O" &&  <img src="/assets/seed.png" alt="Seed" />}
+      {content === "G" &&  <img src="/assets/flower.png" alt="Flower" />}
     </div>
   );
 };
@@ -84,11 +94,22 @@ export const BoardMain = () => {
           </div>
         </div>
         <div>
-          <h2 className="mt-4 text-3xl">My Bag</h2>
-          <div className="flex flex-wrap" style={{ width: "500px"}}>
-            {bagData && bagData.map((item, index) => (
-              <Cell key={item.id.toString()} id={item.id.toString()} content={item.content.toString()} type={item.type} index={index} gridData={gridData} bagData={bagData} moveItem={moveItem} changeSelectedIndex={changeSelectedIndex} />
-            ))}
+          <div>
+            <h2 className="mt-4 text-3xl">My Tools</h2>
+            <div className="flex flex-wrap" style={{ width: "500px"}}>
+              <Water />
+            </div>
+          </div>
+          <div>
+            <h2 className="mt-4 text-3xl">My Bag</h2>
+            <div className="flex flex-wrap" style={{ width: "500px"}}>
+              {bagData && bagData.map((item, index) => (
+                <Cell key={item.id.toString()} id={item.id.toString()} content={item.content.toString()} type={item.type} index={index} gridData={gridData} bagData={bagData} moveItem={moveItem} changeSelectedIndex={changeSelectedIndex} />
+              ))}
+              {bagData && !bagData.length && <p>Nothing. Buy something <Link href="/marketplace" passHref className="link">
+                Here
+              </Link></p>}
+            </div>
           </div>
         </div>
       </div>
