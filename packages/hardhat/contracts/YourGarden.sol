@@ -61,6 +61,12 @@ contract YourGarden {
         grid[index].content = "G";
     }
 
+    function cutFlower(uint256 index) public {
+        grid[index].content = "-";
+        myBag.push(Box(26 + myBag.length , 26 + myBag.length, "mybags", "O"));
+        myBag.push(Box(26 + myBag.length , 26 + myBag.length, "mybags", "O"));
+    }
+
     function withdraw() isOwner public {
         (bool success,) = owner.call{value: address(this).balance}("");
         require(success, "Failed to send Ether");

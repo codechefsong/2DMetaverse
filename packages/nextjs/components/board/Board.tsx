@@ -8,6 +8,7 @@ import {
 import { useRouter } from 'next/router';
 
 import { Water } from "./Water";
+import { Scissor } from "./Scissor";
 
 const Cell = ({ id, content, type, index, gridData, bagData, moveItem, changeSelectedIndex }) => {
   const router = useRouter();
@@ -16,6 +17,9 @@ const Cell = ({ id, content, type, index, gridData, bagData, moveItem, changeSel
     console.log(item)
     if(item.type === "water"){
       router.push('/water/'+ index)
+    }
+    if(item.type === "scissor"){
+      router.push('/sissor/'+ index)
     }
     else{
       router.push('/confirm/'+ index)
@@ -98,6 +102,7 @@ export const BoardMain = () => {
             <h2 className="mt-4 text-3xl">My Tools</h2>
             <div className="flex flex-wrap" style={{ width: "500px"}}>
               <Water />
+              <Scissor />
             </div>
           </div>
           <div>
